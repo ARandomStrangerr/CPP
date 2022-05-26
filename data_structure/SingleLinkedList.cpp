@@ -37,7 +37,7 @@ public:
   int length(); // number of element that this structure contain
   friend std::ostream& operator<<(std::ostream& os, SingleLinkedList<T>& lst){
     /* the dumb architecture does not allow me to write this one as out side of
-    the class so i incide it here. do not ask why i don't to it like other
+    the class so i include it here. do not ask why i don't to it like the other
     methods. it will trigger my PTHD */
     SingleLinkedNode<T>* currentNode = lst.head;
     os << "[ ";
@@ -47,7 +47,7 @@ public:
     }
     os << "]\n";
     return os;
-  }
+  } // technically the "toString" method to print out things within the structure
 };
 
 // declare the implementation of class
@@ -103,9 +103,7 @@ void SingleLinkedList<T>::add(int index, T val){
   else {
     SingleLinkedNode<T>* currentNode = this -> head;
     SingleLinkedNode<T>* newNode = new SingleLinkedNode<T>(val);
-    for(int i = 0; i != index - 1; i++){
-      currentNode = currentNode -> next;
-    }
+    for(int i = 0; i != index - 1; i++) currentNode = currentNode -> next;
     newNode -> next = currentNode -> next;
     currentNode -> next  = newNode;
     this -> size++;
@@ -134,10 +132,39 @@ T SingleLinkedList<T>::peek(int index) {
   else if (index == this -> size - 1) return this -> peekLast();
   else {
     SingleLinkedNode<T>* currentNode = this -> head;
-    for (int i = 0; i < index; i++){
-      currentNode = currentNode -> next;
-    }
+    for (int i = 0; i < index; i++) currentNode = currentNode -> next;
     return currentNode -> val;
+  }
+}
+
+
+// remove the first item from the list
+template <typename T>
+T SingleLinkedList<T>::removeFirst() {
+  SingleLinkedNode<T>* newHead = this -> head -> next;
+  this -> head -> next = nullptr;
+  this -> head = newHead;
+  this -> size--;
+}
+
+// remove the last item from the list
+template <typename T>
+T SinglelinkedList<T>::removeLast() {
+  return this -> remove(this -> size - 1);
+}
+
+// remove an arbitrary item with given index from the list
+template <typename T>
+T SingleLinkedList<T>:: remove(int index) {
+  if (index < 0 || index >= this -> size) thow std::runtime_error("index out of bound");
+  else {
+    SingleLinkedNode<T>* currentNode = this -> head;
+    for (int i = 0; i < index - 1; i++) currentNode = currentNode -> next;
+    SingleLinkedNode<T>* deleteNode = currentNode -> next;
+    currentNode -> next = deleteNode -> next;
+    deleteNode -> next = nullptr;
+    this -> size--;
+    return deleteNode.val;
   }
 }
 

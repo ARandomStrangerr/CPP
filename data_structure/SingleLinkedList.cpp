@@ -111,18 +111,21 @@ void SingleLinkedList<T>::add(int index, T val){
     this -> size++;
   }
 }
-// peek the item at the front of the list;
+
+// peek the item at the front of the list
 template <typename T>
 T SingleLinkedList<T>::peekFirst() {
   if (size == 0) throw std::runtime_error("list is empty");
   return this -> head -> val;
 }
+
 // peek an item at the end of the list
 template <typename T>
 T SingleLinkedList<T>::peekLast() {
   if (size == 0) throw std::runtime_error("list is empty");
   return this -> tail -> val;
 }
+
 // peek at the element with the given index of the list
 template <typename T>
 T SingleLinkedList<T>::peek(int index) {
@@ -137,6 +140,7 @@ T SingleLinkedList<T>::peek(int index) {
     return currentNode -> val;
   }
 }
+
 // get the size of the list
 template <typename T>
 int SingleLinkedList<T>::length(){

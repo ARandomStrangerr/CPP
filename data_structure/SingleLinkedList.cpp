@@ -35,7 +35,7 @@ public:
   T removeLast(); // remove last element from the structure
   T remove(int); // remove the element at the given index from the strucutre
   int length(); // number of element that this structure contain
-  friend std::ostream& operator<<(std::ostream& os, SingleLinkedList<T>& lst){
+  friend std::ostream& operator<<(std::ostream& os, const SingleLinkedList<T>& lst){
     /* the dumb architecture does not allow me to write this one as out side of
     the class so i include it here. do not ask why i don't to it like the other
     methods. it will trigger my PTHD */
@@ -149,14 +149,14 @@ T SingleLinkedList<T>::removeFirst() {
 
 // remove the last item from the list
 template <typename T>
-T SinglelinkedList<T>::removeLast() {
+T SingleLinkedList<T>::removeLast() {
   return this -> remove(this -> size - 1);
 }
 
 // remove an arbitrary item with given index from the list
 template <typename T>
 T SingleLinkedList<T>:: remove(int index) {
-  if (index < 0 || index >= this -> size) thow std::runtime_error("index out of bound");
+  if (index < 0 || index >= this -> size) throw std::runtime_error("index out of bound");
   else {
     SingleLinkedNode<T>* currentNode = this -> head;
     for (int i = 0; i < index - 1; i++) currentNode = currentNode -> next;
@@ -164,7 +164,7 @@ T SingleLinkedList<T>:: remove(int index) {
     currentNode -> next = deleteNode -> next;
     deleteNode -> next = nullptr;
     this -> size--;
-    return deleteNode.val;
+    return deleteNode -> val;
   }
 }
 

@@ -15,6 +15,7 @@ private:
   T val;
   SingleLinkedNode<T>* next;
   SingleLinkedNode(T);
+  ~SingleLinkedNode();
 };
 
 template <typename T>
@@ -25,6 +26,7 @@ private:
   int size;
 public:
   SingleLinkedList();
+  ~SingleLinkedList();
   void addFirst(T); // add an element at the head of the structure
   void addLast(T); // add an element at the last of the structure
   void add(int, T); // add an element at an arbitrary point of the structure
@@ -57,6 +59,11 @@ SingleLinkedNode<T>::SingleLinkedNode(T val){
   this -> val = val;
   this -> next = 0;
 }
+// destructor of SingleLinkedNode
+template <typename T>
+SingleLinkedNode<T>::~SingleLinkedNode(){
+  this -> next = nullptr;
+}
 
 // constructor of SingleLinkedList
 template <typename T>
@@ -64,6 +71,20 @@ SingleLinkedList<T>::SingleLinkedList(){
   this -> size = 0;
   this -> head = 0;
   this -> tail = 0;
+}
+
+// destructor of SingleLinkedList
+template <typename T>
+SingleLinkedList<T>::~SingleLinkedList(){
+  // SingleLinkedNode<T>* currentNode = this -> head;
+  // while (currentNode -> next != nullptr) {
+  //   SingleLinkedNode<T>* nextNode = currentNode -> next;
+  //   delete currentNode;
+  //   currentNode = nextNode;
+  // }
+  // delete this -> tail;
+  // this -> head = nullptr;
+  // this -> tail = nullptr;
 }
 
 // add to the head of the list
@@ -137,14 +158,15 @@ T SingleLinkedList<T>::peek(int index) {
   }
 }
 
-
 // remove the first item from the list
 template <typename T>
 T SingleLinkedList<T>::removeFirst() {
-  SingleLinkedNode<T>* newHead = this -> head -> next;
-  this -> head -> next = nullptr;
-  this -> head = newHead;
+  SingleLinkedNode<T>* removeNode = this -> head;
+  T removeVal = removeNode -> val;
+  head = removeNode -> next;
+  delete removeNode;
   this -> size--;
+  return removeVal;
 }
 
 // remove the last item from the list
@@ -155,7 +177,7 @@ T SingleLinkedList<T>::removeLast() {
 
 // remove an arbitrary item with given index from the list
 template <typename T>
-T SingleLinkedList<T>:: remove(int index) {
+T SingleLinkedList<T>::remove(int index) {
   if (index < 0 || index >= this -> size) throw std::runtime_error("index out of bound");
   else {
     SingleLinkedNode<T>* currentNode = this -> head;
@@ -163,8 +185,10 @@ T SingleLinkedList<T>:: remove(int index) {
     SingleLinkedNode<T>* deleteNode = currentNode -> next;
     currentNode -> next = deleteNode -> next;
     deleteNode -> next = nullptr;
+    T removeVal = deleteNode -> val;
+    delete deleteNode;
     this -> size--;
-    return deleteNode -> val;
+    return removeVal;
   }
 }
 

@@ -76,15 +76,9 @@ SingleLinkedList<T>::SingleLinkedList(){
 // destructor of SingleLinkedList
 template <typename T>
 SingleLinkedList<T>::~SingleLinkedList(){
-  // SingleLinkedNode<T>* currentNode = this -> head;
-  // while (currentNode -> next != nullptr) {
-  //   SingleLinkedNode<T>* nextNode = currentNode -> next;
-  //   delete currentNode;
-  //   currentNode = nextNode;
-  // }
-  // delete this -> tail;
-  // this -> head = nullptr;
-  // this -> tail = nullptr;
+  while (this -> size != 0) this -> removeFirst();
+  this -> head = nullptr;
+  this -> tail = nullptr;
 }
 
 // add to the head of the list

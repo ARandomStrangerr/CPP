@@ -16,6 +16,7 @@ private:
   DoubleLinkedNode<T>* next;
   T val;
   DoubleLinkedNode(T);
+  ~DoubleLinkedNode();
 };
 template <typename T>
 class DoubleLinkedList{
@@ -24,6 +25,7 @@ private:
   DoubleLinkedNode<T>* dummy;
 public:
   DoubleLinkedList(); // constructor
+  ~DoubleLinkedList(); // destructor
   void addFirst(T); // add an element to the front of the list
   void addLast(T); // add an element to the back of the list
   void add(int, T); // add an element to an arbitrary position of the list
@@ -62,11 +64,21 @@ DoubleLinkedNode<T>::DoubleLinkedNode(T val){ // constructor of DoubleLinkedNode
   this -> next = 0;
 }
 template <typename T>
+DoubleLinkedNode<T>::~DoubleLinkedNode(){ // destructor of DoubleLinkedNode
+  this -> next = nullptr;
+  this -> prev = nullptr;
+}
+template <typename T>
 DoubleLinkedList<T>::DoubleLinkedList(){ // constructor of DoubleLinkedList
   this -> size = 0;
   this -> dummy = new DoubleLinkedNode<T>(0);
   this -> dummy -> next = this -> dummy;
   this -> dummy -> prev = this -> dummy;
+}
+template <typename T>
+DoubleLinkedList<T>::~DoubleLinkedList(){ // destructor of DoubleLinkedNode
+  while (size != 0) this -> removeFirst();
+  delete dummy;
 }
 template <typename T>
 void DoubleLinkedList<T>::addFirst(T val){ // add an element to the front of the list
@@ -111,4 +123,64 @@ void DoubleLinkedList<T>::add(int index, T val){ // add an element at the given 
     currentNode -> next = newNode;
     this -> size++;
   }
+}
+template <typename T>
+T DoubleLinkedList<T>::peekFirst(){ // look at the first element without removing it
+  if (this -> size == 0) throw std::runtime_error("list is empty");
+  return this -> dummy -> next -> val;
+}
+template <typename T>
+T DoubleLinkedList<T>::peekLast(){ // look at the last element without removing it
+  if (this -> size == 0) throw std::runtime_error("list is empty");
+  return this -> dummy -> prev -> val;
+}
+template <typename T>
+T DoubleLinkedList<T>::peek(int index){ // look at the element at the given index
+  if (index < 0 || index >= this -> size) std::runtime_error("index out of bound");
+  DoubleLinkedNode<T>* currentNode = this -> dummy -> next;
+  for (int i = 0; i < index; i++) currentNode = currentNode -> next;
+  return currentNode -> val;
+}
+template <typename T>
+T DoubleLinkedList<T>::removeFirst(){ // remove first element from the list
+  if (this -> size == 0) throw std::runtime_error("list is empty");
+  DoubleLinkedNode<T>* deleteNode = this -> dummy -> next;
+  deleteNode -> next -> prev = this -> dummy;
+  this -> dummy -> next = deleteNode -> next;
+  T returnVal = deleteNode -> val;
+  delete deleteNode;
+  this -> size--;
+  return returnVal;
+}
+template <typename T>
+T DoubleLinkedList<T>::removeLast(){ // remove last element from the list
+  if (this -> size == 0) throw std::runtime_error("list is empty");
+  DoubleLinkedNode<T>* deleteNode = this -> dummy -> prev;
+  deleteNode -> prev -> next = this -> dummy;
+  this -> dummy -> prev = deleteNode -> prev;
+  T returnVal = deleteNode -> val;
+  delete deleteNode;
+  this -> size--;
+  return returnVal;
+}
+template <typename T>
+T DoubleLinkedList<T>::remove(int index){ // remove the element at given index
+  if (this -> size == 0) throw std::runtime_error("list is empty");
+  else if (index < 0 || index >= size) throw std::runtime_error("index out of bound");
+  else if (index == 0) return this -> removeFirst();
+  else if (index == this -> size - 1) return this -> removeLast();
+  else {
+    DoubleLinkedNode<T>* deleteNode = this -> dummy -> next;
+    for (int i = 0; i < index; i++) deleteNode = deleteNode -> next;
+    deleteNode -> next -> prev = deleteNode -> prev;
+    deleteNode -> prev -> next = deleteNode -> next;
+    T returnVal = deleteNode -> val;
+    delete deleteNode;
+    return returnVal;
+  }
+}
+
+template <typename T>
+int DoubleLinkedList<T>::length(){ // return the size of the structure
+  return this -> size;
 }
